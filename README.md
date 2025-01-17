@@ -31,7 +31,7 @@ The experimental results will be available in the paper once it is published.
  * Mini-batch Stochastic Gradient Descent (SGD)
 
 ## Datasets
- * VDSR images / Set5 ([link](http://cv.snu.ac.kr/research/VDSR/train_data.zip))
+ * VDSR images / Set5 ([link](https://cv.snu.ac.kr/research/VDSR/))
  * Random sequences for shuffling data are included as 'npy' file in the repository.
  
 ## Questions / Comments
