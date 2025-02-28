@@ -1,7 +1,7 @@
 
 # TLQS Deep Learning S/W
 This repository contains the S/W framework used for Deep Learning-based image super-resolution experiments in TLQS research work.
-The corresponding paper will be opened and linked here once accepted.
+The corresponding paper will be opened and linked here once accepted. The directory `sample` contains sample random data generated from our TLQS sample.
 
 ## Software Requirements
  * tensorflow2 (<= 2.15.1)
