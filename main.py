@@ -17,6 +17,8 @@ from tqdm import tqdm
 import cv2
 
 if __name__ == '__main__':
+    #gpus = tf.config.experimental.list_physical_devices('GPU')
+    #tf.config.experimental.set_visible_devices(gpus[1], 'GPU')
     
     #Load train data
     Y_train=feeder.read_train_data()
@@ -24,7 +26,7 @@ if __name__ == '__main__':
     #Load test data
     print("================ Load test data...================")
     test_imgs = []
-    dir = "./Set5/"
+    dir = "./test_image/"
     file_list = os.listdir(dir)
     image_files = [file for file in file_list]
     image_names = [os.path.splitext(file)[0] for file in file_list]
@@ -42,7 +44,7 @@ if __name__ == '__main__':
     
     # Hyperparameters for the experiment: 
     epoch_num=50
-    batch_size = 64
+    batch_size = 32
     num_train_batches= Y_train.shape[0]//batch_size + 1
     optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
     log_dir = "log/fit/vdsr"  
@@ -52,11 +54,24 @@ if __name__ == '__main__':
         psnr_bicubic_mean = 0
         psnr_output_mean = 0
         
-        Y_shuffled_train=[]
-        random_shuffle_list=np.load('integer.npy')
-        for i in range(len(Y_train)):
-            Y_shuffled_train.append(Y_train[random_shuffle_list[i]])
-        Y_train_tensor = tf.data.Dataset.from_tensor_slices(Y_shuffled_train).batch(batch_size)
+        mode = 0
+        if mode == 0: # our random signal
+            print ("Using our random signal!")
+            Y_shuffled_train=[]
+            random_shuffle_list=np.load('integer.npy')
+            for i in range(len(Y_train)):
+                Y_shuffled_train.append(Y_train[random_shuffle_list[i]])
+            Y_train_tensor = tf.data.Dataset.from_tensor_slices(Y_shuffled_train).batch(batch_size)
+        elif mode == 1: # python random
+            print ("Using python psuedo random!")
+            Y_train_tensor = tf.data.Dataset.from_tensor_slices(Y_train).shuffle(buffer_size=len(Y_train)).batch(batch_size)
+        else: # no shuffle
+            print ("No shuffle!")
+            Y_shuffled_train=[]
+            random_shuffle_list = range(len(Y_train))
+            for i in range(len(Y_train)):
+                Y_shuffled_train.append(Y_train[random_shuffle_list[i]])
+            Y_train_tensor = tf.data.Dataset.from_tensor_slices(Y_shuffled_train).batch(batch_size)
         
         #Train
         loss_train = 0
